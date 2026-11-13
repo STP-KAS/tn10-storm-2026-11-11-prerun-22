@@ -669,3 +669,11 @@ These lines are baked into this repo's own pastes. They come from pre-run 21's l
 ## Locked during pre-run 22
 
 When a fix works, append it here, one block per fix, in the form shown above: UTC time, what failed or worked, what was changed, why that change stays.
+
+```
+- 2026-11-13T12:10:06Z.
+- What worked: re-read before arming (both nodes synced, tip age under 1 s twice, 20 s apart; budget; bot free check once). Rehearsals p22-g (connectivity guard -> FAILED, nothing sent) and p22-a (full path). Live: cap path 600 -> 1,200 -> 2,000, 4 decided minutes at 2,000, CAP_REACHED, 150 -> 300 -> 600, FROZEN_ARM, LANE_CAP, FROZEN lane-stopped:cap; the connectivity guard stayed quiet and switched off after the cap stop. 3,223 lane transactions accepted, 0 rejected, 0 lost, 7,525.31 tKAS fees, 120.86 parked (not swept). Every OK family hop included (floor 5,682, r150 6,168, r300 6,762, r450 7,052). Mini 83 of 84. Bot NO SEND no-free-node on time.
+- What failed: the families stopped at 12:00:00Z (the base config's fixed end_utc, carried from pre-run 21's stage); HOLD-4 had 12 family hops and RETURN none. The rehearsal ran before 12:00Z and could not catch it.
+- What was changed: nothing during the run. The duel log was copied unchanged to logs/duel.log after the run.
+- Why that change stays, for the next repo: set the family end time from the runner's start plus the planned minutes (or check it against the live start before arming); keep the pre-arm sync re-read, the connectivity guard, the cap guard and FROZEN. Funds: key 0 21,210 usable and the pile 1,659 tKAS after this run, so the next run needs funding before its budget check can pass.
+```

@@ -64,11 +64,24 @@ Two rehearsals ran on the desk against the fake node (no network for the sends),
 
 ## Status after the live run
 
-AFTER_PLACEHOLDER
+Read on 2026-11-13 between 12:04Z and 12:20Z. Not a gate.
+
+- **The run went through RETURN, with one fault of ours.** `PRE-RUN-OPEN` on origin 11:35:26Z, `MINI-ARMED` 11:35:51Z; the desk runner (started 11:36:27Z; `BUDGET_CHECK` key 0 49,578 usable, projected end 26,778) ran BASE, HOLD-1 (the reference), HOLD-2 (the template probe), HOLD-3 (the cap test), the drain, HOLD-4 and RETURN; no repair, no restart; the connectivity guard did not fire. `RUN_STOP return-closed` 12:04:24Z; TIMELINE, MEMPOOL and METHOD on origin 12:10:00–06Z; `RUN end` 12:10:06Z. No runner process was left on the desk. The private TN10 kaspad (2.1.0) was not stopped. No devnet, `KaspaPublicNode` or miner was started; `serve.mjs` and its keeper were not touched.
+- **The fault:** the families stopped at 12:00:00Z (a fixed family end time in the base config, carried from pre-run 21's stage). HOLD-4's minute had 12 family hops and RETURN none, so there is no lane-off RETURN baseline in this run. The drain minutes 11:56–11:59 (lane 0, families running) read 100 / 99 / 99 / 99 percent of BASE.
+- **The cap test** (reference 239 landed a minute, 8 chains at 460): 600 → 1,200 → 2,000, four decided minutes at 2,000 (84–88 percent), `CAP_REACHED` 11:52:22Z after 6 minutes (lane fees 7,217), → 150, 150 → 300 → 600, `FROZEN_ARM` 11:54:23Z (fee cap 7,522), `LANE_CAP` 11:54:28Z, `FROZEN reason=lane-stopped:cap` 11:55:22Z. Landed 201–220 a minute at 2,000 against 235–239 at 460.
+- **The template probe** at 460: template median 473,813 (8 chains), 473,548 (15, paced 230 a minute), 463,207 (30, paced); templates under 400,000 mass 7, 20 and 38 percent of samples. Tiers 85 / 86 / 92 / 95, 88 / 87 / 94 / 102 and 78 / 78 / 84 / 94 percent of BASE.
+- Our heavy lane: `LANE_END` 12:04:24Z, 3,223 accepted, 0 rejected, 0 lost, 7,525.31 tKAS fees, 120.86 tKAS parked on our sink key (not swept), 469 pile coins taken, 0 pending.
+- Inclusion (counter totals): every OK hop (floor 5,682, r150 6,168, r300 6,762, r450 7,052) and every lane transaction (3,223) landed.
+- The outside heavy fee-100 stream was essentially absent (0–2 entries a minute).
+- Mini: every step published and read in full; 83 of 84 cohort cells match the desk (1 off by 3 hops). Its TN10 kaspad was not wiped or restarted.
+- Bot: `NO SEND no-free-node` for the pinned minute 12:00Z (on origin 12:01:03 Brussels, first try); nothing sent.
+- Keys after the run (read-only status): key 0 2,626 coins over 3 tKAS, 21,210 usable (abort line 18,000), 134 small coins; keys 1–15 have no genesis coin; payment pile (key 16) 105 coins, 1,659 tKAS. The next run needs funds first.
+- Spend: lane 7,525.31, families 2,758.87, housekeeping a few tKAS: about 10,290 tKAS in fees, plus 120.86 parked.
+- Results: [logs/LESSONS.md](logs/LESSONS.md), [logs/duel.log](logs/duel.log), and the pre-run 22 block in [locks/LOCKED.md](locks/LOCKED.md).
 
 ### Public statement
 
-We run our own heavy lane on TN10 in this pre-run, with the operator's OK: 8, 15 and 30 chains at a fixed 460 for 6 minutes, then 8 chains for 10 minutes at rates our rule sets between 150 and the 2,000 sompi/gram cap, about five of them at 2,000. While it runs, other TN10 users' transactions paying up to about the lane's rate wait longer on the nodes that see them. The figures for this run are added here after it. This is our own testing; tKAS has no value.
+We run our own heavy lane on TN10 in this pre-run, with the operator's OK: 8, 15 and 30 chains at a fixed 460 for 6 minutes, then 8 chains for 10 minutes at rates our rule sets between 150 and the 2,000 sompi/gram cap, about five of them at 2,000. While it runs, other TN10 users' transactions paying up to about the lane's rate wait longer on the nodes that see them. In this run the lane ran 15 minutes: 2 with 8 chains at 460 (the reference), 4 with 15 and 30 chains at 460 under a 230-a-minute submit cap, and 9 on the greedy rule with 8 chains (600 to the 2,000 cap, 4 minutes at 2,000, back to 150, up to 600, then stopped on purpose). On our desk node other traffic landed 3,099–3,258 a minute while the lane ran, against 3,104 and 3,373 with the lane at 0 (BASE): inside BASE's own spread, so we could not see a difference in this run. The node's fee estimate rose to 1,140 at 2,000 instead of about 100. Our own hops at 100, a stand-in for a low-fee user, ran at 85–89 percent of their BASE pace with 8 chains at any rate from 460 to 2,000 and at 73 percent in the worst minute with 30 chains. No outside heavy stream was present. This is our own testing; tKAS has no value.
 
 ## When something breaks
 
