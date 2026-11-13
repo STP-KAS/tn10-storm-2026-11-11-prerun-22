@@ -1,0 +1,65 @@
+> **Experimental. We are just trying this.** [Disclaimer](DISCLAIMER.md) · Kaspa Testnet-10 only; tKAS has no value.
+>
+> **This is the playbook for pre-run 22.** It is not Wednesday. It is not Tuesday. It is not pre-run 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, or 21. It does not start a machine and it does not arm one.
+
+# Playbook
+
+Who does what, and the gates before each machine may start. The plan is [plan/PLAN.md](plan/PLAN.md), the locks are [locks/LOCKED.md](locks/LOCKED.md), and the go files are the three GO pages. This page does not override them.
+
+## Oversight
+
+TN10 ops oversees this rehearsal end to end: Mini, the desk (Build), and the bot. TN10 only. Never mainnet. Do not edit the Tuesday repo, the Wednesday repo, or pre-run 1's to 21's go files. Do not write `REVIEW_CLOSED`.
+
+For pre-run 22 the operator does not paste. On 2026-11-12 he asked TN10 ops for covenant pre-runs under congestion and competition, pre-run 11 and then 12, 13 or more as needed (voice, 09:06 and 09:09 Brussels time), and at 10:04 in chat said "Keep exploring". That is the arm. The agents start their runners once the gates are facts.
+
+## Start gates
+
+1. **Mini node synced.** Existing TN10 kaspad, existing data, no wipe. `isSynced` true, DAA moving.
+2. **Desk node synced.** Existing private TN10 kaspad, existing data, loopback only, started with `pwsh`. No wipe. Synced, DAA moving.
+3. **No other runner.** No earlier runner, waiter, or counter on any machine. Lane above the abort line. The desk's private candidate list is present and not empty (`HELD candidates-missing` otherwise).
+4. **Hashes.** `hashes/SIXTEEN.md` with sixteen rows and an On origin line, from [tools/sixteen](tools/sixteen/README.md).
+5. **Open.** The desk pushes `logs/PRE-RUN-OPEN.md`. Mini then pushes `logs/MINI-ARMED.md`.
+6. **Counter, families, senders.** The desk runner starts the counter on its private node and waits for its start line (`HELD counter-down` otherwise). Then the genesis from the bundle that wrote `hashes/SIXTEEN.md`, the families, and the payment steps.
+
+## Who does what
+
+| Who | Role | What not to do |
+|---|---|---|
+| **Desk (Build)** | Sends the sixteen families (four fixed tiers, one path, one build, kit24) and runs our own heavy lane in one lane process (one lane; the operator's OK, calibrated first). No payments. Its private TN10 node counts what the chain accepted (lock line (iv)) and its probe reads the mempool (xii). Publishes `hashes/SIXTEEN.md`, `logs/PRE-RUN-OPEN.md`, `counts/desk/` per step, `counts/chain/TIMELINE.md` and `MEMPOOL.md` after the tail, and `logs/METHOD.md`. | Do not stop or wipe the desk node. No Windows PowerShell 5.1, no `KaspaPublicNode`, no miner, no devnet. No 8- or 32-family publisher. No second runner. Never restart the runner mid-run. No payment sender. No heavy lane other than the runner's own lane process (which carries both lanes). |
+| **Mini** | Second chain read on its own node. Does not send, mine, or hold a key. Publishes `logs/MINI-ARMED.md`, then `counts/mini/` when the matching desk file is on origin. | Do not wipe. Do not repeat the desk's head as Mini's. |
+| **Bot (TN10 ops)** | Sends payments in the HOLD-4 minute only, on a synced public kaspad that is not one the desk kept, or publishes a legal `NO SEND`. | Do not send in any other step. One waiter. No local node. |
+
+## Status when this repo was opened
+
+Not a gate. Read on 2026-11-13 between 10:38Z and 10:47Z. This is our own TN10 testing; status lines are what we read on our own machines.
+
+- **Pre-run 22 is pre-run 21 again.** [Pre-run 21](https://github.com/STP-KAS/tn10-storm-2026-11-11-prerun-21) was void: from about 10:25Z to 10:33Z the desk and the Mini lost their internet connection (a robot vacuum knocked the network switch), the lane could not reach its node, and the run was stopped with `logs/FAILED.md` at 10:35Z, nothing sent, no findings. Every runner stopped on that file; nothing of pre-run 21 is running.
+- Mini: existing TN10 kaspad 2.1.0 up, no wipe. Read-only at 10:44:25Z and 10:44:45Z: synced, 8 peers; the first reading was about 70 s behind the tip, the second 0.2 s (DAA 1,042 in 20 s while it caught up). Read again before arming.
+- Desk: existing private TN10 kaspad 2.1.0 up with `pwsh`, no wipe, not stopped for this pre-run. Read-only at 10:44:18Z and 10:44:38Z: synced, 9 peers, newest block 0.4 s and 0.1 s old, DAA 233 in 20 s. `serve.mjs` and its keeper are not touched.
+- Box: no local TN10 node. No bot waiter running.
+- **Before this repo (the operator's go, 2026-11-13 11:39 Brussels), all between our own keys, none rejected, recorded privately on the desk:**
+  - Keys 1–15 got a fresh genesis coin from key 0 (15 transactions), 10:45Z.
+  - **Key 0 refilled from the payment pile** (`refill21.mjs`), 10:47Z: 7 transactions, 130 pile coins (2,630 tKAS), 0.30 tKAS in fees. Sized on usable coins so the budget passes with margin while the pile keeps room for the lane.
+  - After: key 0 2,760 coins over 3 tKAS, **49,578 usable**; payment pile **549 coins, 10,811 tKAS** (the lane's fee cap 9,500 plus its pile floor 1,000 fit).
+- **Budget.** About 760 usable tKAS a family minute, 8,000 over the 18,000 line at the end, **30 planned family minutes**: read-only `budget21.mjs` 10:47Z, 49,578 − 760 × 30 = **26,778 projected at the end**, over 26,000: ok. The runner repeats this check before genesis.
+- **Hop calibration on the node** (kit24 unchanged), 10:46:10Z, calibration covenant `…-p22-cal` (not one of the sixteen, not in `SIXTEEN.md`): family 1 at 100: kit24 storage 41,619 = node, node rate 100.31; family 13 at 450: 41,854 = node, node rate 450.10.
+- **Our heavy lane's calibration:** at 2,000, 10:46:09Z: SDK storage 266,835 = node, compute 2,036, node rate 2,000 (fee 5.34 tKAS); at 100, 10:46:10Z: 266,673 on both sides, node rate 100.
+- **New in this repo: a connectivity guard.** Every 10 s the desk runner looks at the last minute that closed at least 25 s ago. While the plan has the lane running and it has not stopped on a cap, a minute is dark if the lane logged no minute, got no submit accepted, or none of ours landed on the desk counter. Two dark minutes in a row: the runner stops everything (no sends) and publishes `FAILED`.
+- The re-read just before `PRE-RUN-OPEN` is recorded in the offline rehearsal section below.
+- Known risks, not fixed mid-run: as in pre-run 21. Our lane slows other TN10 users' transactions at fees up to about its own rate while it runs, and this run takes it to 2,000 on purpose for about five minutes (fee cap 9,500 tKAS; the cap guard puts it back to 150 after 4 decided minutes at the cap). Short segments, one run. The × 2 steps from 600 are our choice. The outside heavy fee-100 stream may be there. The probe and the template watcher read the desk node, not a miner. Only two unique public kaspads answered so far, so the bot is expected to file `NO SEND no-free-node`.
+
+## Offline rehearsal, recorded before `PRE-RUN-OPEN`
+
+REHEARSAL_PLACEHOLDER
+
+## Status after the live run
+
+AFTER_PLACEHOLDER
+
+### Public statement
+
+We run our own heavy lane on TN10 in this pre-run, with the operator's OK: 8, 15 and 30 chains at a fixed 460 for 6 minutes, then 8 chains for 10 minutes at rates our rule sets between 150 and the 2,000 sompi/gram cap, about five of them at 2,000. While it runs, other TN10 users' transactions paying up to about the lane's rate wait longer on the nodes that see them. The figures for this run are added here after it. This is our own testing; tKAS has no value.
+
+## When something breaks
+
+Append a worked fix to [locks/LOCKED.md](locks/LOCKED.md) in the form that page shows, and a repair line to `logs/FIXES.md`. If the run dies before RETURN, write `logs/FAILED.md`, stop every runner, waiter, and counter, and do not resume. The next attempt is a new repo that starts from this repo's lock file.
