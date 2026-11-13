@@ -50,7 +50,17 @@ Not a gate. Read on 2026-11-13 between 10:38Z and 10:47Z. This is our own TN10 t
 
 ## Offline rehearsal, recorded before `PRE-RUN-OPEN`
 
-REHEARSAL_PLACEHOLDER
+Two rehearsals ran on the desk against the fake node (no network for the sends), with 2-minute steps for BASE, the reference, the template probe and RETURN (`STORM_LANE_MIN=2`, `STORM_RET_MIN=2`) and the cap test at its full 10 minutes (`STORM_CAP_MIN=10`).
+
+- `p22-g` (the new connectivity guard), 2026-11-13 10:54:10Z to about 11:01:36Z. The fake node was killed on purpose 5 s into the reference minute, to stand in for a lost connection. The guard logged two dark minutes (11:00:31Z and 11:01:31Z), stopped everything with nothing sent and published `FAILED` to the rehearsal's local origin (`RUNNER_EXIT 5`, as designed). From the cut to `FAILED` took about 3.5 minutes. A first try of this rehearsal stopped at genesis because we had copied the real sixteen-submit tool into the rehearsal by mistake; it only reached the fake node, and we replaced it with the rehearsal's own fake one.
+- `p22-a` (the full path, on the final files: the same files, by hash after line endings, as the live run and this repo's `tools/desk` for the desk runner, lane, counter, probe and template watcher), 2026-11-13 11:03:00Z to 11:32:27Z. Preflight passed; `BUDGET_CHECK` logged (key 0 49,578 usable, 30 planned family minutes, projected end 26,778); genesis 16 of 16; `FEE_SPLIT` floor 100, r150 150, r300 300, r450 450; `LANE_PLAN` as in the plan. The template probe paced 230, 230 (N 15) and 230, 238 (N 30) a minute. The cap path did what the plan says: 600 to 1,200 to 2,000, four decided minutes at 2,000, `CAP_REACHED` after 6 minutes, back to 150, two decisions (150 to 300 to 600), `FROZEN_ARM`, the lane stopped on its lowered fee cap, `FROZEN reason=lane-stopped:cap`. The connectivity guard switched itself off once the lane had stopped on the cap (no false `FAILED`). 2,965 lane submits OK, 0 rejected, 0 lost; the template watcher wrote 554 rows; every step file, TIMELINE, MEMPOOL and METHOD published to the local origin; no `ERROR` line; `RUNNER_EXIT 0`.
+- The fake node does not model block space or fee priority, so the landing numbers above say nothing about the network. They only show that the controller, the cap guard, the freeze and the guard run as written.
+
+**Re-read just before `PRE-RUN-OPEN`** (read-only, 2026-11-13 11:33Z to 11:35Z):
+
+- Both nodes, two readings 20 s apart. Desk: synced, 8 peers, tip age 0.1 s and 0.8 s, 222 DAA in 20 s. Mini: synced, 8 peers, tip age 0.2 s and 0.4 s, 226 DAA in 20 s. (At 10:44Z the Mini's tip had been 70 s old for one reading, then caught up; this time both were at the tip.)
+- `budget21.mjs` 11:34Z: synced, key 0 49,578 usable (2,760 coins over 3 tKAS, none small), projected end 26,778 over 26,000: ok. Pile 549 coins, 10,811 tKAS.
+- The bot's free check, once, 11:34:20Z: kept 1 and 5 = 2 distinct kaspads; every other answering node is one of those two; no free node.
 
 ## Status after the live run
 
